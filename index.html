@@ -15,6 +15,7 @@
             background-size: cover;
             background-attachment: fixed;
             background-position: center;
+            background-blend-mode: overlay;
         }
         .container {
             max-width: 100%;
@@ -60,6 +61,10 @@
             transform: translateY(-2px);
             box-shadow: 0 3px 5px rgba(0,0,0,0.1);
         }
+        .price-option.selected {
+            border: 2px solid #0066cc;
+            background-color: #e6f2ff;
+        }
         .price-option h3 {
             margin: 0;
             font-size: 16px;
@@ -86,6 +91,8 @@
             box-sizing: border-box;
             font-size: 14px;
             background-color: #fff;
+            text-align: right;
+            direction: rtl;
         }
         .upload-area {
             border: 2px dashed #0066cc;
@@ -95,6 +102,17 @@
             border-radius: 8px;
             font-size: 14px;
             background-color: rgba(230, 242, 255, 0.5);
+            cursor: pointer;
+        }
+        .image-preview {
+            margin-top: 10px;
+            text-align: center;
+        }
+        .image-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
         }
         button {
             background-color: #0066cc;
@@ -113,6 +131,9 @@
             background-color: #0055aa;
             transform: translateY(-2px);
             box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+        }
+        button:active {
+            transform: translateY(0) !important;
         }
         small {
             font-size: 12px;
@@ -142,6 +163,59 @@
         }
         .payment-instructions ol {
             padding-right: 15px;
+        }
+        
+        @keyframes dollarSpin {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+        
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(135deg, #0066cc, #00cc66);
+            color: white;
+            border-radius: 10px;
+            margin: 20px 0;
+            animation: fadeIn 0.5s ease-in-out;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: 2px solid white;
+        }
+        
+        .dollar-emoji {
+            font-size: 60px;
+            display: inline-block;
+            animation: dollarSpin 2s linear infinite, float 3s ease-in-out infinite;
+            margin: 15px 0;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        
+        .success-text {
+            font-size: 18px;
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px) rotateY(0deg); }
+            50% { transform: translateY(-15px) rotateY(180deg); }
+            100% { transform: translateY(0px) rotateY(360deg); }
+        }
+        
+        .contact-info {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #555;
+            padding: 10px;
+            background-color: rgba(255,255,255,0.8);
+            border-radius: 8px;
         }
     </style>
 </head>
@@ -187,10 +261,11 @@
         
         <div id="fastpay-method" class="form-group" style="display:none;">
             <label>وێنەی پارەدان:</label>
-            <div class="upload-area">
+            <div class="upload-area" onclick="document.getElementById('fastpay-receipt').click()">
                 <p>وێنەی پارەدان هەڵبگرە یان کلیک بکە</p>
-                <input type="file" id="fastpay-receipt" accept="image/*">
+                <input type="file" id="fastpay-receipt" accept="image/*" style="display:none;" onchange="previewImage(this, 'fastpay-preview')">
             </div>
+            <div id="fastpay-preview" class="image-preview"></div>
             <label for="fastpay-number" style="margin-top:10px;">ژمارە فاستپەی:</label>
             <input type="text" id="fastpay-number" placeholder="07712345678">
             <small>بڕی پارە: <span id="fastpay-amount">0</span> دینار</small>
@@ -209,10 +284,11 @@
         
         <div id="asia-method" class="form-group" style="display:none;">
             <label>وێنەی کارت:</label>
-            <div class="upload-area">
+            <div class="upload-area" onclick="document.getElementById('asia-receipt').click()">
                 <p>وێنەی کارت هەڵبگرە یان کلیک بکە</p>
-                <input type="file" id="asia-receipt" accept="image/*">
+                <input type="file" id="asia-receipt" accept="image/*" style="display:none;" onchange="previewImage(this, 'asia-preview')">
             </div>
+            <div id="asia-preview" class="image-preview"></div>
             <label for="asia-number" style="margin-top:10px;">ژمارە کارتی ئاسیا:</label>
             <input type="text" id="asia-number" placeholder="6037 XXXX XXXX XXXX">
             <small>بڕی پارە: <span id="asia-amount">0</span> دینار</small>
@@ -222,7 +298,22 @@
             <p>تکایە چاوەڕێ بکە... زانیاریەکان نێردەرێن</p>
         </div>
         
+        <div id="success-message" class="success-message">
+            <div class="dollar-emoji">💵</div>
+            <h3 style="font-size: 22px; margin-bottom: 15px;">سوپاس بۆ ناردنی زانیاریەکان!</h3>
+            <p class="success-text">
+                ئەگەر زانیاریەکانت درووست بێت<br>
+                بە زووترین کات تیمیەکەمان پەیوەندیت پێوە ئەکات
+            </p>
+            <div style="font-size: 24px; margin-top: 10px;">🙏</div>
+        </div>
+        
         <button onclick="submitForm()">تۆمارکردن</button>
+        
+        <div class="contact-info">
+            <p>پەیوەندی: <strong>@example_username</strong> (تیکتۆک)</p>
+            <p>کاتەکانی کارکردن: 10:00 AM - 10:00 PM (هەموو ڕۆژە)</p>
+        </div>
     </div>
 
     <script>
@@ -234,10 +325,10 @@
         
         function selectOption(element, option) {
             document.querySelectorAll('.price-option').forEach(el => {
-                el.style.backgroundColor = '';
+                el.classList.remove('selected');
             });
             
-            element.style.backgroundColor = '#e6f2ff';
+            element.classList.add('selected');
             selectedOption = option;
             
             if (option === '20') {
@@ -263,6 +354,25 @@
             } else if (method === 'asia') {
                 document.getElementById('asia-method').style.display = 'block';
             }
+        }
+        
+        function previewImage(input, previewId) {
+            const preview = document.getElementById(previewId);
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.innerHTML = `<img src="${e.target.result}" alt="وێنەی هەڵگیراو">`;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        
+        function validateFastpay(number) {
+            return /^07[0-9]{8}$/.test(number);
+        }
+        
+        function validateAsiaCard(number) {
+            return /^6037\s?[0-9]{4}\s?[0-9]{4}\s?[0-9]{4}$/.test(number);
         }
         
         async function submitForm() {
@@ -302,8 +412,8 @@
                     return;
                 }
                 
-                if (!number) {
-                    alert('تکایە ژمارە فاستپەیەکە بنووسە');
+                if (!number || !validateFastpay(number)) {
+                    alert('تکایە ژمارە فاستپەیەکی دروست بنووسە (07712345678)');
                     return;
                 }
                 
@@ -317,16 +427,22 @@
                     return;
                 }
                 
-                if (!number) {
-                    alert('تکایە ژمارە کارتی ئاسیا بنووسە');
+                if (!number || !validateAsiaCard(number)) {
+                    alert('تکایە ژمارە کارتی ئاسیای دروست بنووسە (6037 XXXX XXXX XXXX)');
                     return;
                 }
                 
                 paymentDetails = `کارتی ئاسیا: ${number} | بڕ: ${selectedAmount.toLocaleString()} دینار`;
             }
             
+            // پشکنینی دواجار
+            if (!confirm('دڵنیایت لە زانیاریەکان؟ دوای ناردن ناتوانرێ گۆڕانکاری بکرێت')) {
+                return;
+            }
+            
             // نیشاندانی بارکردن
             document.getElementById('loading').style.display = 'block';
+            document.getElementById('success-message').style.display = 'none';
             
             try {
                 // دروستکردنی زانیاریەکان
@@ -345,14 +461,19 @@
                     await sendPhotoToTelegram(receiptFile);
                 }
                 
-                alert('✅ زانیاریەکان بەسەرکەوتوویی نێردران! بەزودی پەیوەندیت پێوەدەکرێت');
+                // نیشاندانی پەیامی سەرکەوتوویی
+                document.getElementById('success-message').style.display = 'block';
+                document.getElementById('loading').style.display = 'none';
                 
                 // پاککردنەوەی فۆرمەکە
-                resetForm();
+                setTimeout(() => {
+                    resetForm();
+                    document.getElementById('success-message').style.display = 'none';
+                }, 6000);
+                
             } catch (error) {
                 console.error('هەڵە لە ناردنی زانیاریەکان:', error);
                 alert('❌ هەڵەیەک ڕوویدا لە ناردنی زانیاریەکان. تکایە دووبارە هەوڵبدەرەوە');
-            } finally {
                 document.getElementById('loading').style.display = 'none';
             }
         }
@@ -396,7 +517,7 @@
         
         function resetForm() {
             document.querySelectorAll('.price-option').forEach(el => {
-                el.style.backgroundColor = '';
+                el.classList.remove('selected');
             });
             document.getElementById('phone').value = '';
             document.getElementById('tiktok').value = '';
@@ -405,6 +526,8 @@
             document.getElementById('asia-number').value = '';
             document.getElementById('fastpay-receipt').value = '';
             document.getElementById('asia-receipt').value = '';
+            document.getElementById('fastpay-preview').innerHTML = '';
+            document.getElementById('asia-preview').innerHTML = '';
             document.getElementById('fastpay-method').style.display = 'none';
             document.getElementById('asia-method').style.display = 'none';
             selectedOption = null;
