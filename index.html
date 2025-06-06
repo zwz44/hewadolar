@@ -11,13 +11,18 @@
             margin: 0;
             padding: 15px;
             color: #333;
+            background-image: url('https://i.ibb.co/0jQ7X0t/libyan-dinar-bills.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
         }
         .container {
             max-width: 100%;
-            background-color: #fff;
+            background-color: rgba(255, 255, 255, 0.95);
             padding: 15px;
             border-radius: 10px;
-            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            backdrop-filter: blur(2px);
         }
         .logo {
             text-align: center;
@@ -27,17 +32,20 @@
             width: 150px;
             height: auto;
             border-radius: 10px;
+            border: 2px solid #0066cc;
         }
         h1 {
             color: #0066cc;
             text-align: center;
             font-size: 22px;
             margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         h2 {
             font-size: 18px;
             text-align: center;
             margin-bottom: 15px;
+            color: #333;
         }
         .price-option {
             border: 1px solid #ddd;
@@ -45,7 +53,12 @@
             margin-bottom: 12px;
             border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
+            background-color: rgba(255,255,255,0.8);
+        }
+        .price-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 5px rgba(0,0,0,0.1);
         }
         .price-option h3 {
             margin: 0;
@@ -54,12 +67,16 @@
         }
         .form-group {
             margin-bottom: 15px;
+            background-color: rgba(255,255,255,0.8);
+            padding: 10px;
+            border-radius: 8px;
         }
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
             font-size: 14px;
+            color: #444;
         }
         input, select {
             width: 100%;
@@ -68,14 +85,16 @@
             border-radius: 8px;
             box-sizing: border-box;
             font-size: 14px;
+            background-color: #fff;
         }
         .upload-area {
-            border: 2px dashed #ddd;
+            border: 2px dashed #0066cc;
             padding: 15px;
             text-align: center;
             margin-top: 10px;
             border-radius: 8px;
             font-size: 14px;
+            background-color: rgba(230, 242, 255, 0.5);
         }
         button {
             background-color: #0066cc;
@@ -87,6 +106,13 @@
             font-size: 16px;
             width: 100%;
             margin-top: 15px;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #0055aa;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
         }
         small {
             font-size: 12px;
@@ -98,6 +124,13 @@
             display: none;
             text-align: center;
             margin-top: 10px;
+            color: #0066cc;
+            font-weight: bold;
+        }
+        .payment-details {
+            margin-top: 5px;
+            font-size: 13px;
+            color: #555;
         }
     </style>
 </head>
@@ -111,10 +144,14 @@
         
         <div class="price-option" onclick="selectOption(this, '20')">
             <h3>20 گەڵا - 400 هەزار</h3>
+            <div class="payment-details">بە کارتی ئاسیا: 400,000 دینار</div>
+            <div class="payment-details">بە فاستپەی: 400,000 دینار</div>
         </div>
         
         <div class="price-option" onclick="selectOption(this, '40')">
             <h3>40 گەڵا - 700 هەزار</h3>
+            <div class="payment-details">بە کارتی ئاسیا: 700,000 دینار</div>
+            <div class="payment-details">بە فاستپەی: 700,000 دینار</div>
         </div>
         
         <div class="form-group">
@@ -140,19 +177,23 @@
         <div id="fastpay-method" class="form-group" style="display:none;">
             <label>وێنەی پارەدان:</label>
             <div class="upload-area">
-                <p>وێنەکە هەڵبگرە</p>
+                <p>وێنەی پارەدان هەڵبگرە یان کلیک بکە</p>
                 <input type="file" id="fastpay-receipt" accept="image/*">
             </div>
             <label for="fastpay-number" style="margin-top:10px;">ژمارە فاستپەی:</label>
             <input type="text" id="fastpay-number" placeholder="07712345678">
+            <small>بڕی پارە: <span id="fastpay-amount">0</span> دینار</small>
         </div>
         
         <div id="asia-method" class="form-group" style="display:none;">
             <label>وێنەی کارت:</label>
             <div class="upload-area">
-                <p>وێنەی کارت هەڵبگرە</p>
+                <p>وێنەی کارت هەڵبگرە یان کلیک بکە</p>
                 <input type="file" id="asia-receipt" accept="image/*">
             </div>
+            <label for="asia-number" style="margin-top:10px;">ژمارە کارتی ئاسیا:</label>
+            <input type="text" id="asia-number" placeholder="6037 XXXX XXXX XXXX">
+            <small>بڕی پارە: <span id="asia-amount">0</span> دینار</small>
         </div>
         
         <div id="loading" class="loading">
@@ -167,6 +208,7 @@
         const CHAT_ID = '7594104612';
         
         let selectedOption = null;
+        let selectedAmount = 0;
         
         function selectOption(element, option) {
             document.querySelectorAll('.price-option').forEach(el => {
@@ -175,6 +217,16 @@
             
             element.style.backgroundColor = '#e6f2ff';
             selectedOption = option;
+            
+            if (option === '20') {
+                selectedAmount = 400000;
+            } else if (option === '40') {
+                selectedAmount = 700000;
+            }
+            
+            // نوێکردنەوەی بڕی پارە لە هەڵبژاردەی پارەدان
+            document.getElementById('fastpay-amount').textContent = selectedAmount.toLocaleString();
+            document.getElementById('asia-amount').textContent = selectedAmount.toLocaleString();
         }
         
         function showPaymentMethod() {
@@ -232,16 +284,22 @@
                     return;
                 }
                 
-                paymentDetails = `فاستپەی: ${number}`;
+                paymentDetails = `فاستپەی: ${number} | بڕ: ${selectedAmount.toLocaleString()} دینار`;
             } else if (payment === 'asia') {
                 receiptFile = document.getElementById('asia-receipt').files[0];
+                const number = document.getElementById('asia-number').value;
                 
                 if (!receiptFile) {
                     alert('تکایە وێنەی کارت هەڵبگرە');
                     return;
                 }
                 
-                paymentDetails = `کارتی ئاسیا`;
+                if (!number) {
+                    alert('تکایە ژمارە کارتی ئاسیا بنووسە');
+                    return;
+                }
+                
+                paymentDetails = `کارتی ئاسیا: ${number} | بڕ: ${selectedAmount.toLocaleString()} دینار`;
             }
             
             // نیشاندانی بارکردن
@@ -250,10 +308,11 @@
             try {
                 // دروستکردنی زانیاریەکان
                 const message = `✅ داواکاری نوێ\n\n` +
-                               `📌 جۆری داواکاری: ${selectedOption === '20' ? '20 گەڵا' : '40 گەڵا'}\n` +
+                               `📌 جۆری داواکاری: ${selectedOption === '20' ? '20 گەڵا (400K)' : '40 گەڵا (700K)'}\n` +
+                               `💰 بڕی پارە: ${selectedAmount.toLocaleString()} دینار\n` +
                                `📞 ژمارە مۆبایل: +964${phone}\n` +
                                `📱 تیکتۆک: ${tiktok}\n` +
-                               `💳 شێوازی پارەدان: ${paymentDetails}`;
+                               `💳 ${paymentDetails}`;
                 
                 // ناردنی نامەکە بۆ بۆت
                 await sendToTelegram(message);
@@ -320,11 +379,13 @@
             document.getElementById('tiktok').value = '';
             document.getElementById('payment').value = '';
             document.getElementById('fastpay-number').value = '';
+            document.getElementById('asia-number').value = '';
             document.getElementById('fastpay-receipt').value = '';
             document.getElementById('asia-receipt').value = '';
             document.getElementById('fastpay-method').style.display = 'none';
             document.getElementById('asia-method').style.display = 'none';
             selectedOption = null;
+            selectedAmount = 0;
         }
     </script>
 </body>
